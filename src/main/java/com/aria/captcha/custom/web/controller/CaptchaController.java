@@ -90,4 +90,22 @@ public class CaptchaController {
 		final Random rand = SecureRandom.getInstanceStrong();  
 	    return rand.nextInt(max - min + 1) + min;
 	}
+	
+	
+	@PostMapping("/consume")
+	@Transactional(noRollbackFor = ReCaptchaInvalidException.class)
+	public GenericResponse consumeCaptchaChallenge(final HttpServletRequest request)  {
+		String response = request.getParameter("response");
+		String reqCode = request.getParameter("reqCode");
+		if (response==null || response.length() == 0) {
+			 throw new ReCaptchaInvalidException(messageSource.getMessage("aria.custom.captcha.no-robot", null, Locale.ITALIAN));
+		}
+		if (captchaCustomService.consumeCaptchaChallenge(reqCode, response)) {
+			return new GenericResponse("success");
+		} else {
+			  throw new ReCaptchaInvalidException(messageSource.getMessage("aria.custom.captcha.no-validated", null, Locale.ITALIAN));
+		}
+		
+	}
+	
 }

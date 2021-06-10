@@ -125,6 +125,13 @@ public class CaptchaCustomService {
 		return Boolean.FALSE;
 	}
 	
+	/**
+	 * Questo medtodo consente di consumare una CaptchaChallenge e di marcarla come completata e potenzialmente eliminabile.
+	 * 
+	 * @param reqCode
+	 * @param response
+	 * @return
+	 */
 	public boolean consumeCaptchaChallenge(String reqCode, String response) {
 		CaptchaReq captchaReq = captchaReqRepository.findByReqCodeAndResolvedTrueAndConsumedFalse(reqCode);
 		if (captchaReq != null) {
